@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+
+const cluster = require('cluster');
+
+const port = process.env.PORT || 3000
+const appFile = process.env.APP || __dirname + '/../src';
+
+if(cluster.isMaster) {
+    const numWorkers = require('os').cpus().length;
+
+    console.log('Master cluster setting up ' + numWorkers + ' workers...');
+
+    for(var i = 0; i < numWorkers; i++) {
+        cluster.fork();
+    }
+
+    cluster.on('online', function(worker) {
+            console.log('Worker ' + worker.process.pid + ' is online');
+    });
+
+    cluster.on('exit', function(worker, code, signal) {
+        console.log('Worker ' + worker.process.pid + ' died with code: ' + code + ', and signal: ' + signal);
+        console.log('Starting a new worker');
+        cluster.fork();
+    });
+} else {
+    const app = require(appFile);
+    app.listen(port, () => {
+        console.log('server listening on port ' + port);
+    });
+
+
+}
