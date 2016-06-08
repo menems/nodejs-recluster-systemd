@@ -3,6 +3,7 @@ Description=nodejs systemd sample
 
 [Service]
 ExecStart=/vagrant/bin/server-recluster
+ExecReload=/bin/kill -s SIGUSR2 $MAINPID
 Restart=always
 RestartSec=10                       # Restart service after 10 seconds if node service crashes
 StandardOutput=syslog               # Output to syslog

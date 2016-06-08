@@ -17,7 +17,8 @@ curl http://localhost:3000
 ```bash
 vagrant ssh
 sudo systemctl status nodejs-systemd.service
-sudo systemctl kill -s SIGUSR2 --kill-who=main nodejs-systemd.service
+# reload child process
+sudo systemctl reload nodejs-systemd.service
 ```
 
 
